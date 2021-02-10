@@ -21,6 +21,7 @@ model User {
   hashedPassword String?
   role           String    @default("user")
   sessions       Session[]
+  createdActivities	Activity[]
 }
 
 model Session {
@@ -35,4 +36,15 @@ model Session {
   antiCSRFToken      String?
   publicData         String?
   privateData        String?
+}
+
+model Activity {
+	id          Int      @default(autoincrement()) @id
+	createdAt   DateTime @default(now())
+	updatedAt   DateTime @updatedAt
+	createdBy	User	 @relation(fields: [createdById], references: [id])
+	createdById	Int
+	points      Int
+	name		String
+	description	String?
 }
