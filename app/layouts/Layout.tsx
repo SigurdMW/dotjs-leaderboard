@@ -1,9 +1,56 @@
-import { ReactNode } from "react"
-import { Head } from "blitz"
+import React, { ReactNode, Suspense } from "react"
+import { Head, useMutation, Link } from "blitz"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
+import logout from "app/auth/mutations/logout"
 
 type LayoutProps = {
   title?: string
   children: ReactNode
+}
+
+const UnauthLinks = () => (
+  <ul className="list-reset flex justify-between flex-1 md:flex-none items-center">
+    <li className="flex-1 md:flex-none md:mr-3">
+      <Link href="/signup">
+        <a className="inline-block py-2 px-4 text-white no-underline">Sign Up</a>
+      </Link>
+    </li>
+    <li className="flex-1 md:flex-none md:mr-3">
+      <Link href="/login">
+        <a className="inline-block no-underline text-white hover:text-gray-200 hover:text-underline py-2 px-4">
+          Login
+        </a>
+      </Link>
+    </li>
+  </ul>
+)
+
+const HeaderLinks = () => {
+  const currentUser = useCurrentUser()
+  const [logoutMutation] = useMutation(logout)
+
+  if (currentUser) {
+    return (
+      <ul className="list-reset flex justify-between flex-1 md:flex-none items-center">
+        <li className="flex-1 md:flex-none md:mr-3">
+          <span className="inline-block py-2 px-4 text-white no-underline">
+            {currentUser.name || "Noname"}
+          </span>
+        </li>
+        <li className="flex-1 md:flex-none md:mr-3">
+          <button
+            className="inline-block no-underline text-white hover:text-gray-200 hover:text-underline py-2 px-4"
+            onClick={async () => {
+              await logoutMutation()
+            }}
+          >
+            Logout
+          </button>
+        </li>
+      </ul>
+    )
+  }
+  return <UnauthLinks />
 }
 
 const Layout = ({ title, children }: LayoutProps) => {
@@ -23,7 +70,11 @@ const Layout = ({ title, children }: LayoutProps) => {
             </a>
           </div>
           <div className="flex flex-1 md:w-1/3 justify-center md:justify-start text-white px-2"></div>
-          <div className="flex w-full content-center justify-between md:w-1/3 md:justify-end"></div>
+          <div className="flex w-full pt-2 content-center justify-between md:w-1/3 md:justify-end">
+            <Suspense fallback={<UnauthLinks />}>
+              <HeaderLinks />
+            </Suspense>
+          </div>
         </div>
       </nav>
       <div className="flex flex-col md:flex-row mt-24">
