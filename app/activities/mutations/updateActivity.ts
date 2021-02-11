@@ -9,14 +9,9 @@ export default async function updateActivity(
   ctx.session.authorize()
   const parsedData = ActivityInput.parse(data)
 
-  const points = parseInt(parsedData.points, 10)
-
   const activity = await db.activity.update({
     where: { id: id },
-    data: {
-      ...parsedData,
-      points,
-    },
+    data: parsedData,
   })
 
   return activity

@@ -22,7 +22,7 @@ export const Activity: FC<{ id: number }> = ({ id }) => {
           initialValues={{
             name: activity.name,
             description: activity.description || "",
-            points: activity.points.toString(),
+            points: activity.points,
           }}
           onSubmit={async (values) => {
             await updateMutation({ data: values, id })

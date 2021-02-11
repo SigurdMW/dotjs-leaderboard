@@ -11,7 +11,7 @@ const NewActivityPage: BlitzPage = () => {
     <>
       <h1 className="text-6xl mb-10">New activity</h1>
       <ActivityForm
-        initialValues={{ name: "", points: "0", description: "" }}
+        initialValues={{ name: "", points: 0, description: "" }}
         onSubmit={async (values) => {
           try {
             const activity = await createActivityMutation(values)
