@@ -30,5 +30,5 @@ export default async function getLeaderboard(data: {}, ctx: Ctx) {
   }, {})
 
   const leaderboard: UserWithPoints[] = Object.values(userScore)
-  return leaderboard.sort((a, b) => (a.points > b.points ? 1 : 0))
+  return leaderboard.sort((a, b) => b.points - a.points)
 }

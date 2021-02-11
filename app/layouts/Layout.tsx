@@ -33,6 +33,13 @@ const HeaderLinks = () => {
     return (
       <ul className="list-reset flex justify-between flex-1 md:flex-none items-center">
         <li className="flex-1 md:flex-none md:mr-3">
+          <Link href="/leaderboard">
+            <a className="inline-block no-underline text-white hover:text-gray-200 hover:text-underline py-2 px-4">
+              Leaderboard
+            </a>
+          </Link>
+        </li>
+        <li className="flex-1 md:flex-none md:mr-3">
           <span className="inline-block py-2 px-4 text-white no-underline">
             {currentUser.name || "Noname"}
           </span>
