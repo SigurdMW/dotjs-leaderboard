@@ -1,0 +1,11 @@
+-- CreateTable
+CREATE TABLE "Activity" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "createdById" INTEGER NOT NULL,
+    "points" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    FOREIGN KEY ("createdById") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);

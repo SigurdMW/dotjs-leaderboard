@@ -2,37 +2,65 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 // --------------------------------------
 
 model User {
-  id             Int       @default(autoincrement()) @id
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  name           String?
-  email          String    @unique
-  hashedPassword String?
-  role           String    @default("user")
-  sessions       Session[]
+    id                Int        @id @default(autoincrement())
+    createdAt         DateTime   @default(now())
+    updatedAt         DateTime   @updatedAt
+    name              String?
+    email             String     @unique
+    hashedPassword    String?
+    role              String     @default("user")
+    sessions          Session[]
+    createdActivities Activity[]
+    assignedActions   Action[]   @relation("AssignedActions")
+    createdActions    Action[]   @relation("ActionCreatedBy")
 }
 
 model Session {
-  id                 Int       @default(autoincrement()) @id
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  expiresAt          DateTime?
-  handle             String    @unique
-  user               User?     @relation(fields: [userId], references: [id])
-  userId             Int?
-  hashedSessionToken String?
-  antiCSRFToken      String?
-  publicData         String?
-  privateData        String?
+    id                 Int       @id @default(autoincrement())
+    createdAt          DateTime  @default(now())
+    updatedAt          DateTime  @updatedAt
+    expiresAt          DateTime?
+    handle             String    @unique
+    user               User?     @relation(fields: [userId], references: [id])
+    userId             Int?
+    hashedSessionToken String?
+    antiCSRFToken      String?
+    publicData         String?
+    privateData        String?
+}
+
+model Activity {
+    id          Int      @id @default(autoincrement())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    createdBy   User     @relation(fields: [createdById], references: [id])
+    createdById Int
+    points      Int
+    name        String
+    description String?
+    Action      Action[]
+}
+
+model Action {
+    id            Int      @id @default(autoincrement())
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+    createdByUser User     @relation("ActionCreatedBy", fields: [createdById], references: [id])
+    createdById   Int
+    user          User     @relation("AssignedActions", fields: [userId], references: [id])
+    userId        Int
+    activity      Activity @relation(fields: [activityId], references: [id])
+    activityId    Int
+	comment		  String   @default("")
 }

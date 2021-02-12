@@ -1,5 +1,5 @@
 import React, { PropsWithoutRef } from "react"
-import { useFormContext } from "react-hook-form"
+import { Controller, useFormContext } from "react-hook-form"
 
 export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements["input"]> {
   /** Field name. */
@@ -12,45 +12,50 @@ export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElem
 }
 
 export const LabeledTextField = React.forwardRef<HTMLInputElement, LabeledTextFieldProps>(
-  ({ label, outerProps, ...props }, ref) => {
+  ({ label, outerProps, type, name, placeholder, ...props }, ref) => {
     const {
       register,
       formState: { isSubmitting },
+      control,
       errors,
     } = useFormContext()
-    const error = Array.isArray(errors[props.name])
-      ? errors[props.name].join(", ")
-      : errors[props.name]?.message || errors[props.name]
+    const error = Array.isArray(errors[name])
+      ? errors[name].join(", ")
+      : errors[name]?.message || errors[name]
 
     return (
-      <div {...outerProps}>
-        <label>
-          {label}
-          <input disabled={isSubmitting} {...props} ref={register} />
-        </label>
+      <div {...outerProps} className="mb-6 max-w-lg">
+        <Controller
+          control={control}
+          name={name}
+          render={({ onChange, ...rest }, { invalid, isTouched, isDirty }) => (
+            <label className="block w-full mb-1">
+              {label}
+              <input
+                disabled={isSubmitting}
+                type={type}
+                aria-invalid={invalid}
+                onChange={(v) => {
+                  const value = v.target.value
+                  if (type === "number") {
+                    onChange(parseInt(value, 10))
+                  } else {
+                    onChange(value)
+                  }
+                }}
+                placeholder={placeholder}
+                className="w-full p-1 pl-2 rounded-sm mt-2 text-black"
+                {...rest}
+              />
+            </label>
+          )}
+        />
 
         {error && (
-          <div role="alert" style={{ color: "red" }}>
+          <div role="alert" className="text-red-600">
             {error}
           </div>
         )}
-
-        <style jsx>{`
-          label {
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            font-size: 1rem;
-          }
-          input {
-            font-size: 1rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            border: 1px solid purple;
-            appearance: none;
-            margin-top: 0.5rem;
-          }
-        `}</style>
       </div>
     )
   }
