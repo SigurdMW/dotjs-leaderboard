@@ -7,7 +7,7 @@ type CreateActionInput = {
 }
 
 export default async function createAction({ data }: CreateActionInput, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.authorize("admin")
 
   const { comment, activityId, userId } = ActionInput.parse(data)
 
