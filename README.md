@@ -6,6 +6,18 @@ This is a [Blitz.js](https://github.com/blitz-js/blitz) app.
 
 ## Getting Started
 
+Install the required dependencies.
+
+```
+yarn install
+```
+
+Create an `.env.local` file and make sure it has required environment variables:
+
+```
+DATABASE_URL="file:./db.sqlite"
+```
+
 Run your app in the development mode.
 
 ```
@@ -14,7 +26,9 @@ blitz start
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Environment Variables
+You might need to clear cookies if you get an error, since localhost is used for a lot.
+
+## Environment Variables (this is not neccessary for the current version of the app)
 
 Ensure the `.env.local` file has required environment variables:
 
